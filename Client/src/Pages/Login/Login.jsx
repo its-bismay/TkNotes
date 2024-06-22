@@ -3,7 +3,6 @@ import Navbar from '../../Components/Navbar'
 import { Link } from 'react-router-dom'
 import Password from '../../Components/Password'
 import { validateEmail } from '../../Utils/Helper'
-import loginbg from "../../assets/login.jpg"
 
 const Login = () => {
 
@@ -27,7 +26,7 @@ const Login = () => {
         setError("")
     }
   return (
-    <div className='bg-loginbg min-h-screen object-cover object-center'>
+    <div className='min-h-screen bg-loginbg bg-bottom bg-no-repeat'>
         <Navbar />
 
         <div className="flex items-center justify-center mt-28">

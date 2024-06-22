@@ -33,7 +33,7 @@ const Signup = () => {
     setError("")
 }
   return (
-    <div className='bg-loginbg min-h-screen object-cover object-center'>
+    <div className='min-h-screen bg-loginbg bg-bottom bg-no-repeat'>
       <Navbar />
 
       <div className="flex items-center justify-center mt-28">
