@@ -3,6 +3,7 @@ import Navbar from '../../Components/Navbar'
 import { Link } from 'react-router-dom'
 import Password from '../../Components/Password'
 import { validateEmail } from '../../Utils/Helper'
+import loginbg from "../../assets/login.jpg"
 
 const Login = () => {
 
@@ -26,13 +27,13 @@ const Login = () => {
         setError("")
     }
   return (
-    <div>
+    <div className='bg-loginbg min-h-screen object-cover object-center'>
         <Navbar />
 
         <div className="flex items-center justify-center mt-28">
-            <div className="w-96 border rounded bg-white px-7 py-10">
+            <div className="w-96 border rounded bg-white px-7 py-10 drop-shadow-lg">
                 <form onSubmit={handleLogin}>
-                    <h4 className='text-2xl mb-7'>Login</h4>
+                    <h4 className='text-2xl mb-7 font-medium'>Login</h4>
                     <input type="text" placeholder='Email' className='input-box' value={email} onChange={(e) => setEmail(e.target.value)}/>
                     <Password value={password} onChange={(e) => setPassword(e.target.value)}></Password>
                     {error && <p className='text-red-500 text-xs pb-1'>{error}</p>}
