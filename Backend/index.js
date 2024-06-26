@@ -181,18 +181,25 @@ app.put("/note/edit/:noteId",authenticateToken, async (req,res) => {
     };
 
     try {
-        const note = new Note({
-            title,
-            content,
-            tags: tags || [],
-            userId: user._id
-        })
+        const note = await Note.findOne({_id: noteId, userId: user._id})
+
+        if (!note) {
+            return res.status(404).json({
+                error: true,
+                message: "Note not found"
+            })
+        }
+
+        if(title) note.title = title;
+        if(content) note.content = content;
+        if (tags) note.tags =tags;
+        if (isPinned) note.isPinned = isPinned;
 
         await note.save();
 
         return res.status(200).json({
             error: false,
-            message: "Note added successfully",
+            message: "Note updated successfully",
             note
         })
     } catch (error) {
