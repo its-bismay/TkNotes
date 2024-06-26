@@ -30,7 +30,7 @@ app.get("/", (req, res) => {
     })
 });
 
-// account creation and login
+// account creation and login and getuserdetails
 
 
 app.post("/register", async(req, res) => {
@@ -124,6 +124,20 @@ app.post("/login", async(req,res) => {
 })
 
 
+app.get("/user",authenticateToken, async(req,res) =>{
+    const {user} = req.user;
+
+    const isUser = await User.findOne({_id: user._id});
+
+    if (!isUser) {
+        return res.sendStatus(201);
+    }
+
+    return res.status(200).json({
+        user: {fullName: isUser.fullName, email: isUser.email, "_id": isUser._id, createdOn: isUser.createdOn},
+        message: "user details retrived successfully",
+    })
+})
 // ADD AND UPDATE NOTES
 
 app.post("/note/add",authenticateToken, async (req,res) => {
