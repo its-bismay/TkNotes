@@ -274,7 +274,7 @@ app.delete("/note/delete/:noteId", authenticateToken, async (req,res) => {
     }
 })
 
-//update isOinned value
+//update ispinned value
 
 app.put("/note/pinned/:noteId",authenticateToken, async (req,res) => {
     const noteId = req.params.noteId
@@ -297,7 +297,7 @@ app.put("/note/pinned/:noteId",authenticateToken, async (req,res) => {
 
         return res.status(200).json({
             error: false,
-            message: "Note pinned successfully",
+            message: "isPinned function successfull",
             note
         })
     } catch (error) {
