@@ -6,6 +6,7 @@ import AddEditNotes from '../../Components/AddEditNotes';
 import Modal from "react-modal"
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../Utils/axiosInstance';
+import moment from 'moment';
 
 const Dashboard = () => {
 
@@ -16,6 +17,7 @@ const Dashboard = () => {
     });
 
     const [userInfo, setUserInfo] = useState(null)
+    const [allNotes, setAllNotes] = useState([])
     const navigate =useNavigate()
 
     //getuser info
@@ -33,33 +35,37 @@ const Dashboard = () => {
         }
     };
 
+    const getAllNotes = async () => {
+        try {
+            const response = await axiosInstance.get("/notes");
+            if(response.data && response.data.notes){
+                setAllNotes(response.data.notes)
+            }
+        } catch (error) {
+            console.log("An unexpected error occurred. Please try again.")
+        }
+    }
+
     useEffect(() => {
         getUserInfo()
+        getAllNotes()
     }, [])
   return (
     <>
         <Navbar userInfo={userInfo}></Navbar>
         <div className='container mx-auto p-2'>
             <div className="grid grid-cols-3 gap-4 mt-8">
-                <Card title="Project Complete"
-                    date="11th  Aug 2024"
-                    content="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
-                    tags="#project"
-                    isPinned={true}
-                    Edit={() => {}}
-                    Delete={() => {}}
-                    Pin={() => {}}>
-                </Card>
-
-                <Card title="Project Complete"
-                    date="11th  Aug 2024"
-                    content="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
-                    tags="#project"
-                    isPinned={false}
-                    Edit={() => {}}
-                    Delete={() => {}}
-                    Pin={() => {}}>
-                </Card>
+                {allNotes.map((item, index) => (
+                <Card key={item._id} title={item.title}
+                date={moment(item.createdOn).format('Do MMM YYYY')}
+                content={item.content}
+                tags={item.tags}
+                isPinned={item.isPinned}
+                Edit={() => {}}
+                Delete={() => {}}
+                Pin={() => {}}>
+            </Card>
+                ))}
             </div>
         </div>
         <button className='w-14 h-14 flex items-center justify-center rounded-2xl bg-primary hover:bg-blue-600 absolute right-10 bottom-10 ' onClick={() => {
