@@ -130,7 +130,7 @@ app.get("/user",authenticateToken, async(req,res) =>{
     const isUser = await User.findOne({_id: user._id});
 
     if (!isUser) {
-        return res.sendStatus(201);
+        return res.sendStatus(401);
     }
 
     return res.status(200).json({

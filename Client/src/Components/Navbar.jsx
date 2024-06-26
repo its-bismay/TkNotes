@@ -3,12 +3,13 @@ import Profile from './Profile'
 import { useNavigate } from 'react-router-dom'
 import Searchbar from './Searchbar'
 
-const Navbar = () => {
+const Navbar = ({userInfo}) => {
   const Navigate = useNavigate()
 
   const [query, setQuery] = useState("")
 
   const onLogout = () => {
+    localStorage.clear()
     Navigate("/login")
   }
 
@@ -23,10 +24,10 @@ const Navbar = () => {
   return (
     <div className='bg-white flex items-center justify-between px-6 py-2 drop-shadow-lg'>
         <h2 className='text-2xl text-primary font-semibold text-black py-2'>TkNotes</h2>
-        <Searchbar onClearSearch={onClearSearch} handleSearch={handleSearch} value={query} onChange={({target}) => {
+        {userInfo &&<Searchbar onClearSearch={onClearSearch} handleSearch={handleSearch} value={query} onChange={({target}) => {
           setQuery(target.value)
-        }}></Searchbar>
-        <Profile onLogout={onLogout}></Profile>
+        }}></Searchbar>}
+        {userInfo && <Profile userInfo={userInfo} onLogout={onLogout}></Profile>}
     </div>
   )
 }

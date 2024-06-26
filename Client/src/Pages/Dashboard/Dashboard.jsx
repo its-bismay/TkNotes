@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../../Components/Navbar'
 import Card from '../../Components/Card'
 import { MdAdd } from "react-icons/md";
 import AddEditNotes from '../../Components/AddEditNotes';
 import Modal from "react-modal"
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../Utils/axiosInstance';
 
 const Dashboard = () => {
 
@@ -11,10 +13,32 @@ const Dashboard = () => {
         isShown: false,
         type: "add",
         data: null,
-    })
+    });
+
+    const [userInfo, setUserInfo] = useState(null)
+    const navigate =useNavigate()
+
+    //getuser info
+    const getUserInfo = async () => {
+        try {
+            const response = await axiosInstance.get("/user");
+            if(response.data && response.data.user){
+                setUserInfo(response.data.user)
+            }
+        } catch (error) {
+            if (error.response.status === 401){
+                localStorage.clear();
+                navigate("/login")
+            }
+        }
+    };
+
+    useEffect(() => {
+        getUserInfo()
+    }, [])
   return (
     <>
-        <Navbar></Navbar>
+        <Navbar userInfo={userInfo}></Navbar>
         <div className='container mx-auto p-2'>
             <div className="grid grid-cols-3 gap-4 mt-8">
                 <Card title="Project Complete"
