@@ -9,6 +9,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 
 const User = require('./models/user.model.js')
+const Note = require('./models/notes.model.js')
 
 
 app.use(express.json());
@@ -29,7 +30,8 @@ app.get("/", (req, res) => {
     })
 });
 
-//Create account
+// account creation and login
+
 
 app.post("/register", async(req, res) => {
     const { fullName, email, password } = req.body
@@ -120,6 +122,87 @@ app.post("/login", async(req,res) => {
         })
     }
 })
+
+
+// ADD AND UPDATE NOTES
+
+app.post("/note/add",authenticateToken, async (req,res) => {
+    const { title, content, tags } = req.body;
+    const { user } = req.user;
+
+    if(!title){
+        return res.status(400).json({
+            error: true,
+            message: "Title is required"
+        })
+    };
+
+    if(!content){
+        return res.status(400).json({
+            error: true,
+            message: "Content is required"
+        })
+    };
+
+    try {
+        const note = new Note({
+            title,
+            content,
+            tags: tags || [],
+            userId: user._id
+        })
+
+        await note.save();
+
+        return res.status(200).json({
+            error: false,
+            message: "Note added successfully",
+            note
+        })
+    } catch (error) {
+        return res.status(500).json({
+            error: true,
+            message: "Internal server error"
+        })
+    }
+})
+
+
+app.put("/note/edit/:noteId",authenticateToken, async (req,res) => {
+    const noteId = req.params.noteId
+    const { title, content, tags, isPinned } = req.body;
+    const { user } = req.user;
+
+    if(!title && !content && !tags){
+        return res.status(400).json({
+            error: true,
+            message: "No changes provided"
+        })
+    };
+
+    try {
+        const note = new Note({
+            title,
+            content,
+            tags: tags || [],
+            userId: user._id
+        })
+
+        await note.save();
+
+        return res.status(200).json({
+            error: false,
+            message: "Note added successfully",
+            note
+        })
+    } catch (error) {
+        return res.status(500).json({
+            error: true,
+            message: "Internal server error"
+        })
+    }
+})
+//start the server
 app.listen(8000, () => {
     console.log("serever is running on port 8000")
 });
