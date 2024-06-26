@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import Navbar from '../../Components/Navbar'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Password from '../../Components/Password'
 import { validateEmail } from '../../Utils/Helper'
+import axiosInstance from '../../Utils/axiosInstance'
 
 const Login = () => {
+    const navigate = useNavigate();
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -23,7 +25,28 @@ const Login = () => {
             return;
         }
 
-        setError("")
+        setError("");
+
+        //login api call
+        try {
+            const response = await axiosInstance.post("/login", {
+                email: email,
+                password: password,
+            });
+
+        //Handle successfull login response
+        if(response.data && response.data.accessToken){
+            localStorage.setItem("token", response.data.accessToken)
+            navigate("/home")
+        }
+        } catch (error) {
+            //handle error
+            if (error.response && error.response.data && error.response.data) {
+                setError(error.response.data.message)
+            } else {
+                setError("An unexpected error occurred. Please try again.")
+            }
+        }
     }
   return (
     <div className='min-h-screen bg-loginbg bg-bottom bg-no-repeat'>
