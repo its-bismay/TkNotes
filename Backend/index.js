@@ -209,6 +209,26 @@ app.put("/note/edit/:noteId",authenticateToken, async (req,res) => {
         })
     }
 })
+
+//get all notes
+
+app.get("/notes", authenticateToken, async (req,res) => {
+ const { user } = req.user;
+
+ try {
+    const notes = await Note.find({userId: user._id}).sort({ isPinned: -1});
+    return res.status(200).json({
+        error:false,
+        notes,
+        message: "Notes retrieved successfully"
+    })
+ } catch (error) {
+    return res.status(500).json({
+        error: true,
+        message: "Internal server Error"
+    })
+ }
+})
 //start the server
 app.listen(8000, () => {
     console.log("serever is running on port 8000")
