@@ -10,6 +10,7 @@ import moment from 'moment';
 import Toast from '../../Components/Toast.jsx';
 import Empty from '../../Components/Empty.jsx';
 import imageO from '../../../public/images/add-note-svgrepo-com.svg'
+import imageR from '../../../public/images/file-wrong-svgrepo-com.svg'
 
 const Dashboard = () => {
 
@@ -26,6 +27,8 @@ const Dashboard = () => {
     })
     const [userInfo, setUserInfo] = useState(null)
     const [allNotes, setAllNotes] = useState([])
+
+    const [isSearch, setIsSearch] = useState(false)
     const navigate =useNavigate()
 
     const handleEdit = (noteData) => {
@@ -93,13 +96,34 @@ const Dashboard = () => {
           }
     }
 
+    //searching notes
+    const onSearch = async (query) => {
+        try {
+            const response = await axiosInstance.get("/search", {
+                params: {query},
+            })
+
+            if(response.data && response.data.notes){
+                setIsSearch(true);
+                setAllNotes(response.data.notes)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleClearSearch = () => {
+        setIsSearch(false);
+        getAllNotes()
+    }
+
     useEffect(() => {
         getUserInfo()
         getAllNotes()
     }, [])
   return (
     <>
-        <Navbar userInfo={userInfo}></Navbar>
+        <Navbar userInfo={userInfo} onSearch={onSearch} handleClearSearch={handleClearSearch}></Navbar>
         <div className='container mx-auto p-2'>
             {allNotes.length > 0 ? <div className="grid grid-cols-3 gap-4 mt-8">
                 {allNotes.map((item, index) => (
@@ -113,7 +137,7 @@ const Dashboard = () => {
                 Pin={() => {}}>
             </Card>
                 ))}
-            </div> : <Empty imgSrc={imageO} message={`Start writing your first note! Click the 'Add' button to note down your thoughts, ideas, and reminders. Let's get started!`}/>}
+            </div> : (<Empty imgSrc={isSearch ? imageR :imageO} message={isSearch ? `Oops! No results found...` :`Start writing your first note! Click the 'Add' button to note down your thoughts, ideas, and reminders. Let's get started!`}/>)}
         </div>
         <button className='w-14 h-14 flex items-center justify-center rounded-2xl bg-primary hover:bg-blue-600 absolute right-10 bottom-10 ' onClick={() => {
             setOpenAddEditModal({
