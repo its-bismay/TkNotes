@@ -12,6 +12,9 @@ const Navbar = ({userInfo, onSearch, handleClearSearch}) => {
     localStorage.clear()
     Navigate("/login")
   }
+  const onLogIn = () => {
+    Navigate("/login")
+  }
 
   const onClearSearch = () => {
     setQuery("")

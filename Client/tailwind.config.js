@@ -12,6 +12,7 @@ export default {
       },
       backgroundImage: {
         loginbg: "url(/src/assets/login.png)"
+        
       }
     },
   },
