@@ -20,6 +20,14 @@ const Dashboard = () => {
     const [allNotes, setAllNotes] = useState([])
     const navigate =useNavigate()
 
+    const handleEdit = (noteData) => {
+        setOpenAddEditModal({
+            isShown: true,
+            type: "edit",
+            data: noteData,
+    })
+    }
+
     //getuser info
     const getUserInfo = async () => {
         try {
@@ -61,7 +69,7 @@ const Dashboard = () => {
                 content={item.content}
                 tags={item.tags}
                 isPinned={item.isPinned}
-                Edit={() => {}}
+                Edit={() =>handleEdit(item)}
                 Delete={() => {}}
                 Pin={() => {}}>
             </Card>
