@@ -117,6 +117,22 @@ const Dashboard = () => {
         getAllNotes()
     }
 
+    const updateIsPinned = async (noteData) => {
+        const noteId = noteData._id
+        try {
+            const response = await axiosInstance.put("/note/pinned/" + noteId, {
+                isPinned: !noteData.isPinned
+          });
+      
+          if (response.data && response.data.note) {
+            showToastMessage(response.data.note.isPinned ? "Note pinned successfully!" : "Note unpinned successfully")
+            getAllNotes()
+          }
+          } catch (error) {
+            console.log(error)
+          }
+    }
+
     useEffect(() => {
         getUserInfo()
         getAllNotes()
@@ -134,7 +150,7 @@ const Dashboard = () => {
                 isPinned={item.isPinned}
                 Edit={() =>handleEdit(item)}
                 Delete={() => {deleteNote(item)}}
-                Pin={() => {}}>
+                Pin={() => {updateIsPinned(item)}}>
             </Card>
                 ))}
             </div> : (<Empty imgSrc={isSearch ? imageR :imageO} message={isSearch ? `Oops! No results found...` :`Start writing your first note! Click the 'Add' button to note down your thoughts, ideas, and reminders. Let's get started!`}/>)}
