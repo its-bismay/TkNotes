@@ -8,7 +8,7 @@ import Dashboard from './Pages/Dashboard/Dashboard'
 const routes = (
   <Router>
     <Routes>
-      <Route path='/' exact element={<Login/>}/>
+      {/* <Route path='/' exact element={<Login/>}/> */}
       <Route path='/login' exact element={<Login/>}/>
       <Route path='/register' exact element={<Signup/>}/>
       <Route path='/home' exact element={<Dashboard/>}/>
