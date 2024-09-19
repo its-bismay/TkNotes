@@ -70,7 +70,13 @@ app.post("/register", async(req, res) => {
 
     const accessToken = jwt.sign({ user}, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn:"3600m",
-    }) 
+    })
+    
+    res.cookie('accessToken', accessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'None', // or 'Lax' or 'None' depending on your requirements
+    });
 
 
     return res.status(200).json({
